@@ -1,0 +1,621 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/davepacheco/node-vasync#readme"
+
+    >vasync (v1.6.4)</a>
+</h1>
+<h4>utilities for observable asynchronous control flow</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.vasync">module vasync</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.barrier">
+            function <span class="apidocSignatureSpan">vasync.</span>barrier
+            <span class="apidocSignatureSpan">(args)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.forEachParallel">
+            function <span class="apidocSignatureSpan">vasync.</span>forEachParallel
+            <span class="apidocSignatureSpan">(args, callback)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.forEachPipeline">
+            function <span class="apidocSignatureSpan">vasync.</span>forEachPipeline
+            <span class="apidocSignatureSpan">(args, callback)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.parallel">
+            function <span class="apidocSignatureSpan">vasync.</span>parallel
+            <span class="apidocSignatureSpan">(args, callback)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.pipeline">
+            function <span class="apidocSignatureSpan">vasync.</span>pipeline
+            <span class="apidocSignatureSpan">(args, callback)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.queue">
+            function <span class="apidocSignatureSpan">vasync.</span>queue
+            <span class="apidocSignatureSpan">(worker, concurrency)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.queuev">
+            function <span class="apidocSignatureSpan">vasync.</span>queuev
+            <span class="apidocSignatureSpan">(args)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.vasync.waterfall">
+            function <span class="apidocSignatureSpan">vasync.</span>waterfall
+            <span class="apidocSignatureSpan">(funcs, callback)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.vasync" id="apidoc.module.vasync">module vasync</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.barrier" id="apidoc.element.vasync.barrier">
+        function <span class="apidocSignatureSpan">vasync.</span>barrier
+        <span class="apidocSignatureSpan">(args)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function barrier(args)
+{
+	return (new Barrier(args));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+Example: printing sizes of files in a directory
+
+```js
+var mod_fs = require(&#x27;fs&#x27;);
+var mod_path = require(&#x27;path&#x27;);
+var mod_vasync = require(&#x27;../lib/vasync&#x27;);
+
+var barrier = mod_vasync.<span class="apidocCodeKeywordSpan">barrier</span>();
+
+barrier.on(&#x27;drain&#x27;, function () {
+  console.log(&#x27;all files checked&#x27;);
+});
+
+barrier.start(&#x27;readdir&#x27;);
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.forEachParallel" id="apidoc.element.vasync.forEachParallel">
+        function <span class="apidocSignatureSpan">vasync.</span>forEachParallel
+        <span class="apidocSignatureSpan">(args, callback)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function forEachParallel(args, callback)
+{
+	var func, funcs;
+
+	mod_assert.equal(typeof (args), &#x27;object&#x27;, &#x27;&#x22;args&#x22; must be an object&#x27;);
+	mod_assert.equal(typeof (args[&#x27;func&#x27;]), &#x27;function&#x27;,
+	    &#x27;&#x22;args.func&#x22; must be specified and must be a function&#x27;);
+	mod_assert.ok(Array.isArray(args[&#x27;inputs&#x27;]),
+	    &#x27;&#x22;args.inputs&#x22; must be specified and must be an array&#x27;);
+
+	func = args[&#x27;func&#x27;];
+	funcs = args[&#x27;inputs&#x27;].map(function (input) {
+		return (function (subcallback) {
+			return (func(input, subcallback));
+		});
+	});
+
+	return (parallel({ &#x27;funcs&#x27;: funcs }, callback));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+This function is exactly like `parallel`, except that the input is specified as
+a *single* function (&#x22;func&#x22;) and a list of inputs (&#x22;inputs&#x22;).  The function is
+invoked on each input in parallel.
+
+This example is exactly equivalent to the one above:
+
+```js
+console.log(mod_vasync.<span class="apidocCodeKeywordSpan">forEachParallel</span>({
+    &#x27;func&#x27;: mod_dns.resolve,
+    &#x27;inputs&#x27;: [ &#x27;joyent.com&#x27;, &#x27;github.com&#x27;, &#x27;asdfaqsdfj.com&#x27; ]
+}, function (err, results) {
+    console.log(&#x27;error: %s&#x27;, err.message);
+    console.log(&#x27;results: %s&#x27;, mod_util.inspect(results, null, 3));
+}));
+```
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.forEachPipeline" id="apidoc.element.vasync.forEachPipeline">
+        function <span class="apidocSignatureSpan">vasync.</span>forEachPipeline
+        <span class="apidocSignatureSpan">(args, callback)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function forEachPipeline(args, callback) {
+    mod_assert.equal(typeof (args), &#x27;object&#x27;, &#x27;&#x22;args&#x22; must be an object&#x27;);
+    mod_assert.equal(typeof (args[&#x27;func&#x27;]), &#x27;function&#x27;,
+		&#x27;&#x22;args.func&#x22; must be specified and must be a function&#x27;);
+    mod_assert.ok(Array.isArray(args[&#x27;inputs&#x27;]),
+		&#x27;&#x22;args.inputs&#x22; must be specified and must be an array&#x27;);
+    mod_assert.equal(typeof (callback), &#x27;function&#x27;,
+		&#x27;callback argument must be specified and must be a function&#x27;);
+
+    var func = args[&#x27;func&#x27;];
+
+    var funcs = args[&#x27;inputs&#x27;].map(function (input) {
+		return (function (_, subcallback) {
+			return (func(input, subcallback));
+		});
+    });
+
+    return (pipeline({&#x27;funcs&#x27;: funcs}, callback));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+This function is exactly like `pipeline`, except that the input is specified as
+a *single* function (&#x22;func&#x22;) and a list of inputs (&#x22;inputs&#x22;).  The function is
+invoked on each input in series.
+
+This example is exactly equivalent to the one above:
+
+```js
+console.log(mod_vasync.<span class="apidocCodeKeywordSpan">forEachPipeline</span>({
+    &#x27;func&#x27;: mod_dns.resolve,
+    &#x27;inputs&#x27;: [ &#x27;joyent.com&#x27;, &#x27;github.com&#x27;, &#x27;asdfaqsdfj.com&#x27; ]
+}, function (err, results) {
+    console.log(&#x27;error: %s&#x27;, err.message);
+    console.log(&#x27;results: %s&#x27;, mod_util.inspect(results, null, 3));
+}));
+```
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.parallel" id="apidoc.element.vasync.parallel">
+        function <span class="apidocSignatureSpan">vasync.</span>parallel
+        <span class="apidocSignatureSpan">(args, callback)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function parallel(args, callback)
+{
+	var funcs, rv, doneOne, i;
+
+	mod_assert.equal(typeof (args), &#x27;object&#x27;, &#x27;&#x22;args&#x22; must be an object&#x27;);
+	mod_assert.ok(Array.isArray(args[&#x27;funcs&#x27;]),
+	    &#x27;&#x22;args.funcs&#x22; must be specified and must be an array&#x27;);
+	mod_assert.equal(typeof (callback), &#x27;function&#x27;,
+	    &#x27;callback argument must be specified and must be a function&#x27;);
+
+	funcs = args[&#x27;funcs&#x27;].slice(0);
+
+	rv = {
+	    &#x27;operations&#x27;: new Array(funcs.length),
+	    &#x27;successes&#x27;: [],
+	    &#x27;ndone&#x27;: 0,
+	    &#x27;nerrors&#x27;: 0
+	};
+
+	if (funcs.length === 0) {
+		setImmediate(function () { callback(null, rv); });
+		return (rv);
+	}
+
+	doneOne = function (entry) {
+		return (function (err, result) {
+			mod_assert.equal(entry[&#x27;status&#x27;], &#x27;pending&#x27;);
+
+			entry[&#x27;err&#x27;] = err;
+			entry[&#x27;result&#x27;] = result;
+			entry[&#x27;status&#x27;] = err ? &#x27;fail&#x27; : &#x27;ok&#x27;;
+
+			if (err)
+				rv[&#x27;nerrors&#x27;]++;
+			else
+				rv[&#x27;successes&#x27;].push(result);
+
+			if (++rv[&#x27;ndone&#x27;] &#x3c; funcs.length)
+				return;
+
+			var errors = rv[&#x27;operations&#x27;].filter(function (ent) {
+				return (ent[&#x27;status&#x27;] == &#x27;fail&#x27;);
+			}).map(function (ent) { return (ent[&#x27;err&#x27;]); });
+
+			if (errors.length &#x3e; 0)
+				callback(new mod_verror.MultiError(errors), rv);
+			else
+				callback(null, rv);
+		});
+	};
+
+	for (i = 0; i &#x3c; funcs.length; i++) {
+		rv[&#x27;operations&#x27;][i] = {
+			&#x27;func&#x27;: funcs[i],
+			&#x27;funcname&#x27;: funcs[i].name || &#x27;(anon)&#x27;,
+			&#x27;status&#x27;: &#x27;pending&#x27;
+		};
+
+		funcs[i](doneOne(rv[&#x27;operations&#x27;][i]));
+	}
+
+	return (rv);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+All errors are combined into a single &#x22;err&#x22; parameter to the final callback (see
+below).
+
+Example usage:
+
+```js
+console.log(mod_vasync.<span class="apidocCodeKeywordSpan">parallel</span>({
+    &#x27;funcs&#x27;: [
+function f1 (callback) { mod_dns.resolve(&#x27;joyent.com&#x27;, callback); },
+function f2 (callback) { mod_dns.resolve(&#x27;github.com&#x27;, callback); },
+function f3 (callback) { mod_dns.resolve(&#x27;asdfaqsdfj.com&#x27;, callback); }
+    ]
+}, function (err, results) {
+console.log(&#x27;error: %s&#x27;, err.message);
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.pipeline" id="apidoc.element.vasync.pipeline">
+        function <span class="apidocSignatureSpan">vasync.</span>pipeline
+        <span class="apidocSignatureSpan">(args, callback)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function pipeline(args, callback)
+{
+	var funcs, uarg, rv, next;
+
+	mod_assert.equal(typeof (args), &#x27;object&#x27;, &#x27;&#x22;args&#x22; must be an object&#x27;);
+	mod_assert.ok(Array.isArray(args[&#x27;funcs&#x27;]),
+	    &#x27;&#x22;args.funcs&#x22; must be specified and must be an array&#x27;);
+
+	funcs = args[&#x27;funcs&#x27;].slice(0);
+	uarg = args[&#x27;arg&#x27;];
+
+	rv = {
+	    &#x27;operations&#x27;: funcs.map(function (func) {
+		return ({
+		    &#x27;func&#x27;: func,
+		    &#x27;funcname&#x27;: func.name || &#x27;(anon)&#x27;,
+		    &#x27;status&#x27;: &#x27;waiting&#x27;
+		});
+	    }),
+	    &#x27;successes&#x27;: [],
+	    &#x27;ndone&#x27;: 0,
+	    &#x27;nerrors&#x27;: 0
+	};
+
+	if (funcs.length === 0) {
+		setImmediate(function () { callback(null, rv); });
+		return (rv);
+	}
+
+	next = function (err, result) {
+		if (rv[&#x27;nerrors&#x27;] &#x3e; 0 ||
+		    rv[&#x27;ndone&#x27;] &#x3e;= rv[&#x27;operations&#x27;].length) {
+			throw new mod_verror.VError(&#x27;pipeline callback &#x27; +
+			    &#x27;invoked after the pipeline has already &#x27; +
+			    &#x27;completed (%j)&#x27;, rv);
+		}
+
+		var entry = rv[&#x27;operations&#x27;][rv[&#x27;ndone&#x27;]++];
+
+		mod_assert.equal(entry[&#x27;status&#x27;], &#x27;pending&#x27;);
+
+		entry[&#x27;status&#x27;] = err ? &#x27;fail&#x27; : &#x27;ok&#x27;;
+		entry[&#x27;err&#x27;] = err;
+		entry[&#x27;result&#x27;] = result;
+
+		if (err)
+			rv[&#x27;nerrors&#x27;]++;
+		else
+			rv[&#x27;successes&#x27;].push(result);
+
+		if (err || rv[&#x27;ndone&#x27;] == funcs.length) {
+			callback(err, rv);
+		} else {
+			var nextent = rv[&#x27;operations&#x27;][rv[&#x27;ndone&#x27;]];
+			nextent[&#x27;status&#x27;] = &#x27;pending&#x27;;
+
+			<span class="apidocCodeCommentSpan">/*
+			 * We invoke the next function on the next tick so that
+			 * the caller (stage N) need not worry about the case
+			 * that the next stage (stage N + 1) runs in its own
+			 * context.
+			 */
+</span>			setImmediate(function () {
+				nextent[&#x27;func&#x27;](uarg, next);
+			});
+		}
+	};
+
+	rv[&#x27;operations&#x27;][0][&#x27;status&#x27;] = &#x27;pending&#x27;;
+	funcs[0](uarg, next);
+
+	return (rv);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+for `parallel`.  The error object for the final callback is just the error
+returned by whatever pipeline function failed (if any).
+
+This example is similar to the one above, except that it runs the steps in
+sequence and stops early because `pipeline` stops on the first error:
+
+```js
+console.log(mod_vasync.<span class="apidocCodeKeywordSpan">pipeline</span>({
+    &#x27;funcs&#x27;: [
+function f1 (_, callback) { mod_fs.stat(&#x27;/tmp&#x27;, callback); },
+function f2 (_, callback) { mod_fs.stat(&#x27;/noexist&#x27;, callback); },
+function f3 (_, callback) { mod_fs.stat(&#x27;/var&#x27;, callback); }
+    ]
+}, function (err, results) {
+console.log(&#x27;error: %s&#x27;, err.message);
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.queue" id="apidoc.element.vasync.queue">
+        function <span class="apidocSignatureSpan">vasync.</span>queue
+        <span class="apidocSignatureSpan">(worker, concurrency)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function queue(worker, concurrency)
+{
+	return (new WorkQueue({
+	    &#x27;worker&#x27;: worker,
+	    &#x27;concurrency&#x27;: concurrency
+	}));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+function doneOne()
+{
+  console.log(&#x27;task completed; queue state:\n%s\n&#x27;,
+      JSON.stringify(queue, null, 4));
+}
+
+queue = mod_vasync.<span class="apidocCodeKeywordSpan">queue</span>(mod_fs.stat, 2);
+
+console.log(&#x27;initial queue state:\n%s\n&#x27;, JSON.stringify(queue, null, 4));
+
+queue.push(&#x27;/tmp/file1&#x27;, doneOne);
+queue.push(&#x27;/tmp/file2&#x27;, doneOne);
+queue.push(&#x27;/tmp/file3&#x27;, doneOne);
+queue.push(&#x27;/tmp/file4&#x27;, doneOne);
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.queuev" id="apidoc.element.vasync.queuev">
+        function <span class="apidocSignatureSpan">vasync.</span>queuev
+        <span class="apidocSignatureSpan">(args)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function queuev(args)
+{
+	return (new WorkQueue(args));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.vasync.waterfall" id="apidoc.element.vasync.waterfall">
+        function <span class="apidocSignatureSpan">vasync.</span>waterfall
+        <span class="apidocSignatureSpan">(funcs, callback)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function waterfall(funcs, callback)
+{
+	var rv, current, next;
+
+	mod_assert.ok(Array.isArray(funcs));
+	mod_assert.ok(arguments.length == 1 || typeof (callback) == &#x27;function&#x27;);
+	funcs = funcs.slice(0);
+
+	rv = {
+	    &#x27;operations&#x27;: funcs.map(function (func) {
+	        return ({
+		    &#x27;func&#x27;: func,
+		    &#x27;funcname&#x27;: func.name || &#x27;(anon)&#x27;,
+		    &#x27;status&#x27;: &#x27;waiting&#x27;
+		});
+	    }),
+	    &#x27;successes&#x27;: [],
+	    &#x27;ndone&#x27;: 0,
+	    &#x27;nerrors&#x27;: 0
+	};
+
+	if (funcs.length === 0) {
+		if (callback)
+			setImmediate(function () { callback(null, rv); });
+		return (rv);
+	}
+
+	next = function (idx, err) {
+		var args, entry, nextentry;
+
+		if (err === undefined)
+			err = null;
+
+		if (idx != current) {
+			throw (new mod_verror.VError(
+			    &#x27;vasync.waterfall: function %d (&#x22;%s&#x22;) invoked &#x27; +
+			    &#x27;its callback twice&#x27;, idx,
+			    rv[&#x27;operations&#x27;][idx].funcname));
+		}
+
+		mod_assert.equal(idx, rv[&#x27;ndone&#x27;]);
+		entry = rv[&#x27;operations&#x27;][rv[&#x27;ndone&#x27;]++];
+		args = Array.prototype.slice.call(arguments, 2);
+
+		mod_assert.equal(entry[&#x27;status&#x27;], &#x27;pending&#x27;);
+		entry[&#x27;status&#x27;] = err ? &#x27;fail&#x27; : &#x27;ok&#x27;;
+		entry[&#x27;err&#x27;] = err;
+		entry[&#x27;results&#x27;] = args;
+
+		if (err)
+			rv[&#x27;nerrors&#x27;]++;
+		else
+			rv[&#x27;successes&#x27;].push(args);
+
+		if (err || rv[&#x27;ndone&#x27;] == funcs.length) {
+			if (callback) {
+				args.unshift(err);
+				callback.apply(null, args);
+			}
+		} else {
+			nextentry = rv[&#x27;operations&#x27;][rv[&#x27;ndone&#x27;]];
+			nextentry[&#x27;status&#x27;] = &#x27;pending&#x27;;
+			current++;
+			args.push(next.bind(null, current));
+			setImmediate(function () {
+				nextentry[&#x27;func&#x27;].apply(null, args);
+			});
+		}
+	};
+
+	rv[&#x27;operations&#x27;][0][&#x27;status&#x27;] = &#x27;pending&#x27;;
+	current = 0;
+	funcs[0](next.bind(null, current));
+	return (rv);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+to each function in the chain.  pipeline() always passes the same argument
+followed by the callback, while waterfall() passes whatever values were emitted
+by the previous function followed by the callback.
+
+Here&#x27;s an example:
+
+```js
+mod_vasync.<span class="apidocCodeKeywordSpan">waterfall</span>([
+    function func1(callback) {
+ 	setImmediate(function () {
+		callback(null, 37);
+	});
+    },
+    function func2(extra, callback) {
+	console.log(&#x27;func2 got &#x22;%s&#x22; from func1&#x27;, extra);
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
